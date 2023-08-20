@@ -24,7 +24,7 @@ function Navigation(): JSX.Element {
                         </Link>
                         <Link
                             className="inline-block py-2 px-4 mr-2 leading-5 text-coolGray-500 hover:text-coolGray-900 bg-transparent font-medium rounded-md"
-                            href="/register"
+                            href="/login"
                         >
                             Log In
                         </Link>
@@ -40,3 +40,5 @@ function Navigation(): JSX.Element {
         </nav>
     );
 }
+
+export default Navigation;
