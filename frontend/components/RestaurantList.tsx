@@ -34,7 +34,7 @@ function RestaurantCard({ data }): JSX.Element {
                     height={300}
                     width={300}
                     src={`${process.env.STRAPI_URL || "http://localhost:1337"}${
-                        data.attributes.image.data[0].attributes.url
+                        data.attributes.image.data[0].attributes.url || ""
                     }`}
                     alt=""
                 />
