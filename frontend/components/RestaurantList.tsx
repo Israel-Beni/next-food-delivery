@@ -3,29 +3,33 @@ import { gql, useQuery } from "@apollo/client";
 import Link from "next/link";
 import Image from "next/image";
 import Loader from "./Loader";
+import { gql as gql2 } from "@/types/__generated__";
 
-const QUERY = gql`
-    {
-        restaurants {
+import type {
+    RestaurantEntityResponseCollection,
+    RestaurantEntity,
+} from "@/types/__generated__/graphql";
+
+const QUERY = gql(`
+query Restaurant {
+    restaurants {
+      data {
+        id
+        attributes {
+          name
+          image {
             data {
-                id
-                attributes {
-                    name
-                    description
-                    image {
-                        data {
-                            attributes {
-                                url
-                            }
-                        }
-                    }
-                }
+              attributes {
+                url
+              }
             }
+          }
         }
+      }
     }
-`;
+  }`);
 
-function RestaurantCard({ data }): JSX.Element {
+function RestaurantCard({ data }: { data: RestaurantEntity }): JSX.Element {
     return (
         <div className="w-full md:w-1/2 lg:w-1/3 p-4">
             <div className="h-full bg-gray-100 rounded-2xl">
@@ -34,16 +38,22 @@ function RestaurantCard({ data }): JSX.Element {
                     height={300}
                     width={300}
                     src={`${process.env.STRAPI_URL || "http://localhost:1337"}${
-                        data.attributes.image.data[0].attributes.url || ""
+                        data.attributes &&
+                        data.attributes.image &&
+                        data.attributes.image.data &&
+                        data.attributes.image.data &&
+                        data.attributes.image.data.length &&
+                        data.attributes.image.data[0].attributes &&
+                        data.attributes.image.data[0].attributes.url
                     }`}
                     alt=""
                 />
                 <div className="p-8">
-                    <h3 className="mb-3 font-heading text-xl text-gray-900 hover:text-gray-700 group-hover:undeline font-black">
-                        {data.attributes.name}
+                    <h3 className="mb-3 font-heading text-xl text-gray-900 hover:text-gray-700 group-hover:underline font-black">
+                        {data.attributes && data.attributes.name}
                     </h3>
                     <p className="text-sm text-gray-500 font-bold">
-                        {data.attributes.description}
+                        {data.attributes && data.attributes.description}
                     </p>
                     <div className="flex flex-wrap md:justify-center -m-2">
                         <div className="w-full md:w-auto p-2 my-6">
@@ -61,17 +71,20 @@ function RestaurantCard({ data }): JSX.Element {
     );
 }
 
-function RestaurantList(props): JSX.Element | string {
+function RestaurantList(props: { query: string }): JSX.Element | string {
     const { loading, error, data } = useQuery(QUERY);
 
     if (error) return "Error loading restaurants";
     if (loading) return <Loader />;
 
     if (data.restaurants.data && data.restaurants.data.length) {
-        const searchQuery = data.restaurants.data.filter((query) =>
-            query.attributes.name
-                .toLowerCase()
-                .includes(props.query.toLowerCase())
+        const searchQuery: RestaurantEntity[] = data.restaurants.data.filter(
+            (query: RestaurantEntity) =>
+                query.attributes &&
+                query.attributes.name &&
+                query.attributes.name
+                    .toLowerCase()
+                    .includes(props.query.toLowerCase())
         );
 
         if (searchQuery.length != 0) {
