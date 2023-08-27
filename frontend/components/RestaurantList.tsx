@@ -30,24 +30,41 @@ query Restaurant {
   }`);
 
 function RestaurantCard({ data }: { data: RestaurantEntity }): JSX.Element {
+    let imageUrl = "/uploads";
+    const getImageUrl = (data: RestaurantEntity) => {
+        if (
+            data.attributes &&
+            data.attributes.image &&
+            data.attributes.image.data &&
+            data.attributes.image.data &&
+            data.attributes.image.data.length &&
+            data.attributes.image.data[0].attributes &&
+            data.attributes.image.data[0].attributes.url
+        )
+            imageUrl = data.attributes.image.data[0].attributes.url;
+    };
+    getImageUrl(data);
+    console.log("imageUrl", imageUrl);
+
     return (
         <div className="w-full md:w-1/2 lg:w-1/3 p-4">
             <div className="h-full bg-gray-100 rounded-2xl">
-                <Image
-                    className="w-full rounded-2xl"
-                    height={300}
-                    width={300}
-                    src={`${process.env.STRAPI_URL || "http://localhost:1337"}${
-                        data.attributes &&
-                        data.attributes.image &&
-                        data.attributes.image.data &&
-                        data.attributes.image.data &&
-                        data.attributes.image.data.length &&
-                        data.attributes.image.data[0].attributes &&
-                        data.attributes.image.data[0].attributes.url
-                    }`}
-                    alt=""
-                />
+                {/* {imageUrl !== "/" ? ( */}
+                    <Image
+                        className="w-full rounded-2xl"
+                        height={300}
+                        width={300}
+                        src={`${"http://localhost:1337"
+                        }${imageUrl}`}
+                        alt=""
+                    />
+                {/* // ) : (
+                //     <div
+                //         className="w-full rounded-2xl bg-gray-100"
+                //         // style={{ height: 300 }}
+                //     ></div>
+                // )} */}
+
                 <div className="p-8">
                     <h3 className="mb-3 font-heading text-xl text-gray-900 hover:text-gray-700 group-hover:underline font-black">
                         {data.attributes && data.attributes.name}
@@ -78,6 +95,7 @@ function RestaurantList(props: { query: string }): JSX.Element | string {
     if (loading) return <Loader />;
 
     if (data.restaurants.data && data.restaurants.data.length) {
+        console.log('inside first part')
         const searchQuery: RestaurantEntity[] = data.restaurants.data.filter(
             (query: RestaurantEntity) =>
                 query.attributes &&
@@ -88,6 +106,7 @@ function RestaurantList(props: { query: string }): JSX.Element | string {
         );
 
         if (searchQuery.length != 0) {
+            console.log('inside second part')
             return (
                 <div className="py-16 px-8 bg-white rounded-3xl">
                     <div className="max-w-7xl mx-auto">
