@@ -46,6 +46,11 @@ export type BooleanFilterInput = {
   startsWith?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type ComponentRestaurantRestaurant = {
+  __typename?: 'ComponentRestaurantRestaurant';
+  id: Scalars['ID']['output'];
+};
+
 export type DateTimeFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   between?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
@@ -69,6 +74,63 @@ export type DateTimeFilterInput = {
   null?: InputMaybe<Scalars['Boolean']['input']>;
   or?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   startsWith?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type Dish = {
+  __typename?: 'Dish';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  image?: Maybe<UploadFileEntityResponse>;
+  name?: Maybe<Scalars['String']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  restaurant?: Maybe<RestaurantEntityResponse>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type DishEntity = {
+  __typename?: 'DishEntity';
+  attributes?: Maybe<Dish>;
+  id?: Maybe<Scalars['ID']['output']>;
+};
+
+export type DishEntityResponse = {
+  __typename?: 'DishEntityResponse';
+  data?: Maybe<DishEntity>;
+};
+
+export type DishEntityResponseCollection = {
+  __typename?: 'DishEntityResponseCollection';
+  data: Array<DishEntity>;
+  meta: ResponseCollectionMeta;
+};
+
+export type DishFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<DishFiltersInput>>>;
+  createdAt?: InputMaybe<DateTimeFilterInput>;
+  description?: InputMaybe<StringFilterInput>;
+  id?: InputMaybe<IdFilterInput>;
+  name?: InputMaybe<StringFilterInput>;
+  not?: InputMaybe<DishFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<DishFiltersInput>>>;
+  price?: InputMaybe<FloatFilterInput>;
+  publishedAt?: InputMaybe<DateTimeFilterInput>;
+  restaurant?: InputMaybe<RestaurantFiltersInput>;
+  updatedAt?: InputMaybe<DateTimeFilterInput>;
+};
+
+export type DishInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  restaurant?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type DishRelationResponseCollection = {
+  __typename?: 'DishRelationResponseCollection';
+  data: Array<DishEntity>;
 };
 
 export type FileInfoInput = {
@@ -102,7 +164,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type GenericMorph = I18NLocale | Restaurant | UploadFile | UploadFolder | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
+export type GenericMorph = ComponentRestaurantRestaurant | Dish | I18NLocale | Restaurant | UploadFile | UploadFolder | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
 
 export type I18NLocale = {
   __typename?: 'I18NLocale';
@@ -219,6 +281,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>;
+  createDish?: Maybe<DishEntityResponse>;
   createRestaurant?: Maybe<RestaurantEntityResponse>;
   createUploadFile?: Maybe<UploadFileEntityResponse>;
   createUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -226,6 +289,7 @@ export type Mutation = {
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>;
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
+  deleteDish?: Maybe<DishEntityResponse>;
   deleteRestaurant?: Maybe<RestaurantEntityResponse>;
   deleteUploadFile?: Maybe<UploadFileEntityResponse>;
   deleteUploadFolder?: Maybe<UploadFolderEntityResponse>;
@@ -244,6 +308,7 @@ export type Mutation = {
   removeFile?: Maybe<UploadFileEntityResponse>;
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
+  updateDish?: Maybe<DishEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
   updateRestaurant?: Maybe<RestaurantEntityResponse>;
   updateUploadFile?: Maybe<UploadFileEntityResponse>;
@@ -260,6 +325,11 @@ export type MutationChangePasswordArgs = {
   currentPassword: Scalars['String']['input'];
   password: Scalars['String']['input'];
   passwordConfirmation: Scalars['String']['input'];
+};
+
+
+export type MutationCreateDishArgs = {
+  data: DishInput;
 };
 
 
@@ -285,6 +355,11 @@ export type MutationCreateUsersPermissionsRoleArgs = {
 
 export type MutationCreateUsersPermissionsUserArgs = {
   data: UsersPermissionsUserInput;
+};
+
+
+export type MutationDeleteDishArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -350,6 +425,12 @@ export type MutationResetPasswordArgs = {
   code: Scalars['String']['input'];
   password: Scalars['String']['input'];
   passwordConfirmation: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateDishArgs = {
+  data: DishInput;
+  id: Scalars['ID']['input'];
 };
 
 
@@ -419,6 +500,8 @@ export enum PublicationState {
 
 export type Query = {
   __typename?: 'Query';
+  dish?: Maybe<DishEntityResponse>;
+  dishes?: Maybe<DishEntityResponseCollection>;
   i18NLocale?: Maybe<I18NLocaleEntityResponse>;
   i18NLocales?: Maybe<I18NLocaleEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
@@ -432,6 +515,19 @@ export type Query = {
   usersPermissionsRoles?: Maybe<UsersPermissionsRoleEntityResponseCollection>;
   usersPermissionsUser?: Maybe<UsersPermissionsUserEntityResponse>;
   usersPermissionsUsers?: Maybe<UsersPermissionsUserEntityResponseCollection>;
+};
+
+
+export type QueryDishArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryDishesArgs = {
+  filters?: InputMaybe<DishFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -516,10 +612,19 @@ export type Restaurant = {
   __typename?: 'Restaurant';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  dishes?: Maybe<DishRelationResponseCollection>;
   image?: Maybe<UploadFileRelationResponseCollection>;
   name?: Maybe<Scalars['String']['output']>;
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type RestaurantDishesArgs = {
+  filters?: InputMaybe<DishFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  publicationState?: InputMaybe<PublicationState>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -550,6 +655,7 @@ export type RestaurantFiltersInput = {
   and?: InputMaybe<Array<InputMaybe<RestaurantFiltersInput>>>;
   createdAt?: InputMaybe<DateTimeFilterInput>;
   description?: InputMaybe<StringFilterInput>;
+  dishes?: InputMaybe<DishFiltersInput>;
   id?: InputMaybe<IdFilterInput>;
   name?: InputMaybe<StringFilterInput>;
   not?: InputMaybe<RestaurantFiltersInput>;
@@ -560,6 +666,7 @@ export type RestaurantFiltersInput = {
 
 export type RestaurantInput = {
   description?: InputMaybe<Scalars['String']['input']>;
+  dishes?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   image?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
   name?: InputMaybe<Scalars['String']['input']>;
   publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
