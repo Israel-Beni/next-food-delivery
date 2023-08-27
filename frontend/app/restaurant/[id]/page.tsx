@@ -139,3 +139,5 @@ function Restaurant(): JSX.Element | string {
     }
     return <h1>No Dishes Found</h1>;
 }
+
+export default Restaurant;
