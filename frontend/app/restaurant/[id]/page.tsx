@@ -68,7 +68,7 @@ function DishCard({ data }: { data: DishEntity }): JSX.Element {
                     alt=""
                 />
                 <div className="p-8">
-                    <div className="group inline-block mb-4" href="#">
+                    <div className="group inline-block mb-4" >
                         <h3 className="font-heading text-xl text-gray-900 hover:text-gray-700 group-hover:underline font-black">
                             {attributes && attributes.name}
                         </h3>
