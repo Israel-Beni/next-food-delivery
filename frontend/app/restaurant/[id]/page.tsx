@@ -1,6 +1,6 @@
-import { useQuery } from "@apollo/client";
-import { gql } from "@/types/__generated__";
-import { useSearchParams } from "next/navigation";
+"use client";
+import { useQuery, gql } from "@apollo/client";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { centsToDollars } from "@/utils/centsToDollars";
 import Image from "next/image";
 import Loader from "@/components/Loader";
@@ -10,26 +10,26 @@ import type { ReadonlyURLSearchParams } from "next/navigation";
 import { RestaurantEntity, DishEntity } from "@/types/__generated__/graphql";
 
 const GET_RESTAURANT_DISHES = gql(`
-query ($id: ID!) {
-    restaurant(id: $id) {
-        data {
-            id
-            attributes {
-                name
-                dishes {
-                    data {
-                        id
-                        attributes {
-                            name
-                            description
-                            price
-                            image {
-                                data {
-                                  attributes {
-                                    url
-                                  }
+    query Get_Restaurant_disshes ($id: ID!) {
+        restaurant(id: $id) {
+            data {
+                id
+                attributes {
+                    name
+                    dishes {
+                        data {
+                            id
+                            attributes {
+                                name
+                                description
+                                price
+                                image {
+                                    data {
+                                        attributes {
+                                            url
+                                        }
+                                    }
                                 }
-                                
                             }
                         }
                     }
@@ -37,7 +37,7 @@ query ($id: ID!) {
             }
         }
     }
-}`);
+`);
 
 function DishCard({ data }: { data: DishEntity }): JSX.Element {
     const attributes = data.attributes ? data.attributes : false;
@@ -73,7 +73,10 @@ function DishCard({ data }: { data: DishEntity }): JSX.Element {
                             {attributes && attributes.name}
                         </h3>
                         <h2>
-                            ${centsToDollars(attributes && attributes.price)}
+                            $
+                            {attributes &&
+                                attributes.price &&
+                                centsToDollars(attributes.price)}
                         </h2>
                     </div>
                     <p className="text-sm text-gray-500 font-bold">
@@ -96,22 +99,24 @@ function DishCard({ data }: { data: DishEntity }): JSX.Element {
 }
 
 function Restaurant(): JSX.Element | string {
-    const id = useSearchParams();
-    const { loading, error, data } = useQuery(
-        GET_RESTAURANT_DISHES as TypedDocumentNode<
-            any,
-            { id: ReadonlyURLSearchParams }
-        >,
-        {
-            variables: {
-                id: id,
-            },
-        }
-    );
+    const params = useParams();
+    console.log("params", params);
+    const { loading, error, data } = useQuery(GET_RESTAURANT_DISHES, {
+        variables: {
+            id: params.id,
+        },
+    });
 
     if (error) return "Error Loading Dishes";
     if (loading) return <Loader />;
-    if (data.restaurant.data.attributes.dishes.data.length) {
+    if (
+        data.restaurant &&
+        data.restaurant.data &&
+        data.restaurant.data.attributes &&
+        data.restaurant.data.attributes.dishes &&
+        data.restaurant.data.attributes.dishes.data.length
+    ) {
+        console.log("in part 1");
         const { restaurant } = data;
         const attributes: RestaurantEntity["attributes"] =
             restaurant.data && restaurant.data.attributes
