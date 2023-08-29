@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Navigation from "@/components/Navigation";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { MyApolloProvider } from "@/fassades";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,8 +33,10 @@ export default function RootLayout({
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <body className={inter.className}>
-                <Navigation />
-                <div className="container mx-auto px-4">{children}</div>
+                <MyApolloProvider>
+                    <Navigation />
+                    <div className="container mx-auto px-4">{children}</div>
+                </MyApolloProvider>
             </body>
         </html>
     );
