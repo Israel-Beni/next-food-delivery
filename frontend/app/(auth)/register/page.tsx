@@ -9,7 +9,7 @@ import Form from "@/components/Form";
 import Loader from "@/components/Loader";
 
 const REGISTER_MUTATION = gql(`
-    mutation Register($username: String!, $email: String!, $passowrd: String!) {
+    mutation Register($username: String!, $email: String!, $password: String!) {
         register(input: { username: $username, email: $email, password: $password}) {
             jwt
             user {
@@ -39,7 +39,7 @@ function RegisterRoute(): JSX.Element {
     const handleRegister = async () => {
         const { email, password } = formData;
         const { data } = await registerMutation({
-            variables: { username: email, email: email, password },
+            variables: { username: email, email: email, password: password },
         });
         if (data?.register.user) {
             setUser(data.register.user);
