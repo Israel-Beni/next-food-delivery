@@ -3,18 +3,19 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import Cookie from "js-cookie";
 import { gql } from "@apollo/client";
 import { client } from "@/fassades/components/MyApolloProvider";
+import { DishEntity } from "@/types/__generated__/graphql";
 
 export interface User {
     username: string;
     email: string;
 }
 
-export interface CartItem {
-    id: string;
+export interface CartItem extends DishEntity{
+    // id: string;
     quantity: number;
-    attributes: {
-        price: number;
-    };
+    // attributes: {
+    //     price: number;
+    // };
 }
 
 export interface Cart {

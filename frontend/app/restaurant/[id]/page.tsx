@@ -4,6 +4,7 @@ import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { centsToDollars } from "@/utils/centsToDollars";
 import Image from "next/image";
 import Loader from "@/components/Loader";
+import { CartItem, useAppContext } from "@/contexts/AppContext";
 
 import type { TypedDocumentNode } from "@apollo/client";
 import type { ReadonlyURLSearchParams } from "next/navigation";
@@ -49,8 +50,10 @@ function DishCard({ data }: { data: DishEntity }): JSX.Element {
             ? data.attributes.image.data
             : false;
 
+    const { addItem, setShowCart } = useAppContext();
     const handleAddItem = () => {
-        //
+        addItem(data as CartItem);
+        setShowCart(true);
     };
 
     return (
@@ -68,7 +71,7 @@ function DishCard({ data }: { data: DishEntity }): JSX.Element {
                     alt=""
                 />
                 <div className="p-8">
-                    <div className="group inline-block mb-4" >
+                    <div className="group inline-block mb-4">
                         <h3 className="font-heading text-xl text-gray-900 hover:text-gray-700 group-hover:underline font-black">
                             {attributes && attributes.name}
                         </h3>
