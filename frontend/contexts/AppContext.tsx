@@ -10,7 +10,7 @@ export interface User {
     email: string;
 }
 
-export interface CartItem extends DishEntity{
+export interface CartItem extends DishEntity {
     // id: string;
     quantity: number;
     // attributes: {
@@ -31,7 +31,7 @@ export interface AppContextType {
     removeItem: (item: CartItem) => void;
     resetCart: () => void;
     showCart: boolean;
-    setShowCart: Function;
+    setShowCart: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext({} as AppContextType);
