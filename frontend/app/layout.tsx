@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -6,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { MyApolloProvider } from "@/fassades";
 import { AppProvider } from "@/contexts/AppContext";
+const Cart = dynamic(() => import("@/components/Cart"), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +39,7 @@ export default function RootLayout({
                 <MyApolloProvider>
                     <AppProvider>
                         <Navigation />
+                        <Cart />
                         <div className="container mx-auto px-4">{children}</div>
                     </AppProvider>
                 </MyApolloProvider>

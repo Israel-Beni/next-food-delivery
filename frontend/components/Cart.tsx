@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
 import { useAppContext, CartItem } from "@/contexts/AppContext";
 import { centsToDollars } from "@/utils/centsToDollars";
-import { isEmpty } from "lodash";
+import _, { isEmpty } from "lodash";
 import { useRouter } from "next/navigation";
 
 function CartItem({ data }: { data: CartItem }): JSX.Element {
@@ -11,7 +12,7 @@ function CartItem({ data }: { data: CartItem }): JSX.Element {
         <div className="p-6 flex flex-wrap justify-between border-b border-blueGray-800">
             <div className="w-2/4">
                 <div className="flex flex-col h-full">
-                    {attributes && !isEmpty(attributes) && (
+                    {attributes && !_.isEmpty(attributes) && (
                         <h6 className="font-bold ttext-white mb-1">
                             {attributes.name}
                         </h6>
